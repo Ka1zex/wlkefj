@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <title>Полноэкранный режим</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* Убираем скролл */
+      cursor: none; /* Скрываем курсор */
+      background-color: black;
+    }
+
+    #fullscreenImage {
+      display: none; /* Сначала картинка скрыта */
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover; /* Растягиваем на весь экран */
+    }
+
+    #playButton {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 15px 30px;
+      font-size: 20px;
+      z-index: 100;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<!-- Кнопка для запуска -->
+<button id="playButton">Запустить</button>
+
+<!-- Картинка, которая развернется на весь экран -->
+<img id="fullscreenImage" src="screamer.png" alt="Fullscreen Image">
+
+<!-- Аудио -->
+<audio id="sound" src="fvfyfyfyv.mp3"></audio>
+
+<script>
+  const playButton = document.getElementById("playButton");
+  const fullscreenImage = document.getElementById("fullscreenImage");
+  const sound = document.getElementById("sound");
+
+  // При клике на кнопку:
+  playButton.addEventListener("click", async () => {
+    // 1. Воспроизводим звук
+    sound.currentTime = 0;
+    sound.play().catch(e => console.log("Ошибка звука:", e));
+
+    // 2. Скрываем кнопку
+    playButton.style.display = "none";
+
+    // 3. Показываем картинку
+    fullscreenImage.style.display = "block";
+
+    // 4. Включаем полноэкранный режим
+    try {
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) { // Safari
+        await document.documentElement.webkitRequestFullscreen();
+      }
+    } catch (e) {
+      console.log("Полноэкранный режим не поддерживается:", e);
+    }
+  });
+
+  // Скрываем курсор при движении мыши
+  document.addEventListener("mousemove", () => {
+    document.body.style.cursor = "none";
+  });
+</script>
+</body>
+</html>
